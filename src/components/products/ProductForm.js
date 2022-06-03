@@ -8,7 +8,7 @@ export const ProductForm = () => {
     // assigning default properties to the initial state object, used zero for the default integers.
     const [product, update] = useState({
         name: "", 
-        typeId: 0, 
+        productTypeId: 0, 
         price: 0
     })
 
@@ -24,7 +24,7 @@ export const ProductForm = () => {
         // creating an object to save new product object to API when the button is clicked
         const productToAPI = {
             name: product.name,
-            typeId: parseInt(product.typeId), 
+            productTypeId: parseInt(product.productTypeId), 
             price: parseFloat(product.price)
         }
 
@@ -73,7 +73,7 @@ export const ProductForm = () => {
                         type="text"
                         className="form-control"
                         placeholder="Please enter number value for product type"
-                        value={product.typeId}
+                        value={product.productTypeId}
                         onChange={
                             (event) => {
                                 const copy = {...product}
