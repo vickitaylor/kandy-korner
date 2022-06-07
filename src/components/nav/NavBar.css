@@ -1,18 +1,17 @@
 .navbar {
     display: flex;
     flex-wrap: nowrap;
-    justify-content: left;
+    /* justify-content: left; */
     list-style-type: none;
 }
 
 .navbar__item {
     flex-basis: 20%;
+    margin: 0 2em 0 0;
 }
 
 .navbar__logout {
     margin-left: auto;
 }
 
-.navbar__product { 
-    margin: 0 0 0 2em;
-}
+

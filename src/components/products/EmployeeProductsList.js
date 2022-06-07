@@ -3,7 +3,11 @@ import { useNavigate } from "react-router-dom"
 
 import "./Products.css"
 
-export const ProductsList = () => {
+
+// added prop to the component for the searched products 
+// component to display the products list. refactored some as only displaying for an employee logging in
+
+export const EmployeeProductsList = ({ searchTermState }) => {
     // defined a state variable for the Products
     const [products, setProducts] = useState([])
     // defined new state variable for filtered products. 
@@ -11,15 +15,10 @@ export const ProductsList = () => {
     // defined new state variable for higher priced items
     const [topPricedProducts, setTopPrice] = useState(false)
 
-    // getting the logged in user
-    const localKandyUser = localStorage.getItem("kandy_user")
-    // converting string to an object
-    const kandyUserObject = JSON.parse(localKandyUser)
-
     // saving useNavigate to a variable 
     const navigate = useNavigate()
 
-    // useEffect to fetch the products from the API, used _expand to get the types associated with the products, once received it will be stored in the productArray and then set to the state variable 
+    // useEffect to fetch the products from the API, used _sort to sort the products by name and _expand to get the types associated with the products, once received it will be stored in the productArray and then set to the state variable 
     useEffect(
         () => {
             fetch(`http://localhost:8088/products?_sort=name&_expand=productType`)
@@ -31,14 +30,10 @@ export const ProductsList = () => {
         []
     )
 
-    // useEffect to sort the products by name, then put the sorted array into filteredProducts
+    // useEffect to display the products.  Product names are sorted in the fetch
     useEffect(
         () => {
-                if ( kandyUserObject.staff ){
-                    setFiltered(products)
-            } else { 
-                setFiltered(products)
-            }
+            setFiltered(products)
         },
         [products]
     )
@@ -51,38 +46,29 @@ export const ProductsList = () => {
                     return product.price >= 2.00
                 })
                 setFiltered(highPrice)
-            } else { 
+            } else {
                 setFiltered(products)
             }
         },
         [topPricedProducts]
     )
 
-
-
     // jsx to display the products
-    // button added to display products over $2.00 to employees only page.
+    // button added to display products over $2.00 and show all button.
     return <>
-        {
-            kandyUserObject.staff
-                ? <>
-                    <button onClick={() => setTopPrice(true)}>Top Priced</button>
-                    <button onClick={() => setTopPrice(false)}>Show All</button>
-                    <button onClick={() => navigate("/products/create")}>Add Product</button>
-                </>
-                : ""
-
-        }
+        <button onClick={() => setTopPrice(true)}>Top Priced</button>
+        <button onClick={() => setTopPrice(false)}>Show All</button>
+        <button onClick={() => navigate("/products/create")}>Add Product</button>
 
         <h2>Products</h2>
 
         <article className="products">
             {
-                filteredProducts.map((product) => {                
+                filteredProducts.map((product) => {
                     return <section className="product" key={product.id}>
                         <header>{product.name}</header>
                         <div>Price: {product.price.toLocaleString("en-US", { style: "currency", currency: "USD" })}</div>
-                        <div>Product Type: {product?.productType?.type}</div><br/> 
+                        <div>Product Type: {product?.productType?.type}</div><br />
                     </section>
                 })
             }

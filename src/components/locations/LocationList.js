@@ -27,8 +27,8 @@ export const LocationList = () => {
             {
                 locations.map((location) => {
                     return <section className="location" key={location.id}>
-                        <header>{location.address}</header>
-                        <footer>Store Square Footage: {location.sqft}</footer><br/>
+                        <div>{location.address}</div>
+                        <div>Store Square Footage: {location.sqft}</div><br/>
                     </section>
                 })
             }
@@ -37,3 +37,4 @@ export const LocationList = () => {
 
 
 }
+

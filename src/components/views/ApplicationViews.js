@@ -1,27 +1,18 @@
-import { Outlet, Route, Routes } from "react-router-dom"
-import { LocationList } from "../locations/LocationList"
-import { ProductsList } from "../products/ProductsList"
-import { ProductForm } from "../products/ProductForm"
+import { CustomerViews } from "./CustomerViews"
+import { EmployeeViews } from "./EmployeeViews"
 
+
+// if statement to determine who is logged in to show a certain view depending on the user.
 export const ApplicationViews = () => {
-	return (
-		<Routes>
-			<Route path="/" element= {
-				<>
-					<h2>Kandy Korner</h2>
-					<div>The best candy store around!</div>
-
-					<Outlet />
-				</>
-			}>
-
-				<Route path="locations" element={<LocationList />} />
-				<Route path="products" element={ <ProductsList />} />
-				<Route path="products/create" element={ <ProductForm /> } />
-			</Route>
-		</Routes>
-	)
-
+	
+	const localKandyUser = localStorage.getItem("kandy_user")
+	const KandyUserObject = JSON.parse(localKandyUser)
+	
+	if (KandyUserObject.staff) {
+		return < EmployeeViews /> 
+	} else { 
+		return < CustomerViews />
+	}
 
 }
 

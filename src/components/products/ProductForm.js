@@ -1,22 +1,35 @@
-import { useState } from "react"
+import { useState, useEffect } from "react"
 import { useNavigate } from "react-router-dom"
 
 import "./Products.css"
 
-export const ProductForm = () => { 
+export const ProductForm = () => {
 
     // assigning default properties to the initial state object, used zero for the default integers.
     const [product, update] = useState({
-        name: "", 
-        productTypeId: 0, 
-        price: 0
+        name: "",
+        productTypeId: "",
+        price: ""
     })
 
-    
+    // state for product types 
+    const [productTypes, setTypes] = useState([])
 
     // assigning useNavigate to a variable 
     const navigate = useNavigate()
-    
+
+    // useEffect to get the productTypes
+    useEffect(
+        () => {
+            fetch(`http://localhost:8088/productTypes`)
+                .then(response => response.json())
+                .then((productTypeArr) => {
+                    setTypes(productTypeArr)
+                })
+        },
+        []
+    )
+
     // defining a function to run the following instructions when the submit button is clicked.  Function has one parameter of event (the click event)
     const saveButtonClick = (event) => {
         event.preventDefault()
@@ -24,22 +37,22 @@ export const ProductForm = () => {
         // creating an object to save new product object to API when the button is clicked
         const productToAPI = {
             name: product.name,
-            productTypeId: parseInt(product.productTypeId), 
-            price: parseFloat(product.price)
+            productTypeId: parseInt(product.productTypeId),
+            price: parseFloat(product.price, 2)
         }
 
         // preforming fetch to POST the object to the API
-        return fetch(`http://localhost:8088/products`, { 
-            method: "POST", 
-            headers: { 
+        return fetch(`http://localhost:8088/products`, {
+            method: "POST",
+            headers: {
                 "Content-Type": "application/json"
-            }, 
+            },
             body: JSON.stringify(productToAPI)
         })
-        .then(response => response.json())
-        .then(() => {
-            navigate("/products")
-        })
+            .then(response => response.json())
+            .then(() => {
+                navigate("/products")
+            })
     }
 
     // jsx for the new product form. Form has 3 inputs, product name, product type (integer), and price  (integer)
@@ -49,7 +62,7 @@ export const ProductForm = () => {
             <h2 className="productForm__title">New Product</h2>
             <fieldset>
                 <div className="form-group">
-                    <label htmlFor="name">Product Name: </label>
+                    <label className="product__heading" htmlFor="name">Product Name: </label>
                     <input
                         required autoFocus
                         type="text"
@@ -58,7 +71,7 @@ export const ProductForm = () => {
                         value={product.name}
                         onChange={
                             (event) => {
-                                const copy = {...product}
+                                const copy = { ...product }
                                 copy.name = event.target.value
                                 update(copy)
                             }
@@ -66,44 +79,49 @@ export const ProductForm = () => {
                 </div>
             </fieldset>
             <fieldset>
-                <div className="form-group">
-                    <label htmlFor="typeId">Product Type: </label>
-                    <input
-                        required autoFocus
-                        type="text"
-                        className="form-control"
-                        placeholder="Please enter number value for product type"
-                        value={product.productTypeId}
-                        onChange={
-                            (event) => {
-                                const copy = {...product}
-                                copy.productTypeId = event.target.value
-                                update(copy)
-                            }
-                        } />
-                </div>
+                <div className="product__heading">Product Type:</div>
+                {productTypes.map((type) => {
+                    return (
+                        <div className="product__form" key={`productType--${type.id}`}>
+                            <input
+                                required autoFocus
+                                onChange={(changeEvent) => {
+                                    const copy = { ...product };
+                                    copy.productTypeId = parseInt(changeEvent.target.value);
+                                    update(copy);
+                                }}
+                                type="radio"
+                                name="productType"
+                                value={type.id}
+                            /> {" "}
+                                {type.type}
+                            
+                        </div>
+                    )
+                })}
             </fieldset>
             <fieldset>
                 <div className="form-group">
-                    <label htmlFor="price">Product Price: </label>
+                    <label className="product__heading" htmlFor="price">Product Price: </label>
                     <input
                         required autoFocus
-                        type="text"
+                        type="number"
+                        min="0.00" step="0.01"
                         className="form-control"
                         placeholder="Product Price per Item"
                         value={product.price}
                         onChange={
                             (event) => {
-                                const copy = {...product}
+                                const copy = { ...product }
                                 copy.price = event.target.value
                                 update(copy)
                             }
                         } />
                 </div>
             </fieldset>
-            
+
             <button onClick={(clickEvent) => saveButtonClick(clickEvent)}
-            className="btn btn-primary">
+                className="btn btn-primary">
                 Submit New Product
             </button>
         </form>

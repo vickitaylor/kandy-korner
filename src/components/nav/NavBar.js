@@ -1,28 +1,18 @@
-import { Link, useNavigate } from "react-router-dom"
+import { EmployeeNav } from "./EmployeeNav"
+import { CustomerNav } from "./CustomerNav"
 import "./NavBar.css"
 
 
-// Navbar display function, added links for locations and products
+// Navbar display component, split for customer and employee views.  component determines what kind of user is signed in, then displays the correct view.
 export const NavBar = () => {
-    const navigate = useNavigate()
+    
+    const localKandyUser = localStorage.getItem("kandy_user")
+    const kandyUserObject = JSON.parse(localKandyUser)
 
-    return (
-        <ul className="navbar">
-            <li>
-                <Link className="navbar__item navbar__location" to="/locations">Locations</Link>
-            </li>
-            
-            <li>
-                <Link className="navbar__item navbar__product" to="/products">Products</Link>
-            </li>
-
-            <li className="navbar__item navbar__logout">
-                <Link className="navbar__link" to="" onClick={() => {
-                    localStorage.removeItem("kandy_user")
-                    navigate("/", { replace: true })
-                }}>Logout</Link>
-            </li>
-        </ul>
-    )
+    if (kandyUserObject.staff) { 
+        return < EmployeeNav />
+    } else { 
+        return < CustomerNav />
+    }
 }
 
