@@ -10,13 +10,18 @@ export const EmployeeList = () => {
     const navigate = useNavigate()
 
     // useEffect for getting the employees, users, and locations from the API, observing initial state
+    
+    const getAllEmployees = () => {
+        fetch(`http://localhost:8088/employees?_expand=user&_expand=location`)
+        .then(response => response.json())
+        .then((employeeArray) => {
+            setEmployees(employeeArray)
+        })
+    }
+
     useEffect(
         () => {
-            fetch(`http://localhost:8088/employees?_expand=user&_expand=location`)
-                .then(response => response.json())
-                .then((employeeArray) => {
-                    setEmployees(employeeArray)
-                })
+            getAllEmployees()
         },
         []
     )
@@ -33,6 +38,7 @@ export const EmployeeList = () => {
             name={employee?.user?.name}
             email={employee?.user?.email}
             location={employee?.location?.address}
+            getAllEmployees={getAllEmployees}
             /> )
         } 
     </article>

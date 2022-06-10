@@ -93,7 +93,7 @@ export const ProductForm = () => {
                                 type="radio"
                                 name="productType"
                                 value={type.id}
-                            /> {" "}
+                            /> 
                                 {type.type}
                             
                         </div>

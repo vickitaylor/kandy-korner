@@ -1,11 +1,12 @@
 import { useEffect, useState } from "react"
-import { useParams } from "react-router-dom"
+import { useNavigate, useParams } from "react-router-dom"
 
 // component to display all of the customer information when linked is clicked
 
 export const CustomerDetails = () => { 
     const {customerId} = useParams()
-    
+    const navigate= useNavigate()
+
     // state variable for the individual customer object
     const [ customer, updateCustomer ] = useState({})
 
@@ -26,6 +27,7 @@ export const CustomerDetails = () => {
         <header className="customer__header">Name: {customer?.user?.name}</header>
         <div>Email: {customer?.user?.email}</div>
         <div>Loyalty Number: {customer.loyaltyNumber}</div>
+        <button onClick={()=> navigate(`/customer/${customerId}/edit`)}>Update Loyalty Number</button>
     </section>
 }
 
