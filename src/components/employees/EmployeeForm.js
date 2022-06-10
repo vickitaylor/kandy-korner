@@ -1,5 +1,6 @@
 import { useState, useEffect } from "react"
 import { useNavigate } from "react-router-dom"
+import { getLocations, saveNewUser, saveNewEmployee } from "../ApiManager"
 
 
 // form to add new employees to the api
@@ -29,8 +30,7 @@ export const EmployeeForm = () => {
     // useEffect to get locations, observing initial state
     useEffect(
         () => {
-            fetch(`http://localhost:8088/locations`)
-                .then(response => response.json())
+            getLocations()
                 .then((locationArr) => {
                     setLocations(locationArr)
                 })
@@ -50,30 +50,15 @@ export const EmployeeForm = () => {
         }
 
         // preforming fetch to POST the user object to the API
-        return fetch(`http://localhost:8088/users`, {
-            method: "POST",
-            headers: {
-                "Content-Type": "application/json"
-            },
-            body: JSON.stringify(userToApi)
-        })
-            .then(response => response.json())
-            // once user is posted, then posting employee to API
-            .then((newUser) => {
+        saveNewUser(userToApi)
+            .then((newEmployee) => {
                 const employeeToApi = {
-                    userId: newUser.id,
+                    userId: newEmployee.id,
                     startDate: employee.startDate,
                     payRate: parseFloat(employee.payRate, 2),
                     locationId: parseInt(employee.locationId)
                 }
-                fetch(`http://localhost:8088/employees`, {
-                    method: "POST",
-                    headers: {
-                        "Content-Type": "application/json"
-                    },
-                    body: JSON.stringify(employeeToApi)
-                })
-                    .then(response => response.json())
+                saveNewEmployee(employeeToApi)
                     .then(() => {
                         navigate("/employee")
                     })

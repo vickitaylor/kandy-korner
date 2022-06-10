@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react"
 import { useParams } from "react-router-dom"
+import { getAllEmployees } from "../ApiManager"
 
 // component to display all of the employee information when linked is clicked, 🦖🦖for some reason receiving error when using .toLocaleString("en-US", { style: "currency", currency: "USD" }) on the pay rate🦩🦩
 
@@ -12,8 +13,7 @@ export const EmployeeDetails = () => {
     // useEffect to fetch the individual employee data with their employeeId, observing employeeId 
     useEffect(
         () => { 
-            fetch(`http://localhost:8088/employees?_expand=user&_expand=location&userId=${employeeId}`)
-            .then(response => response.json())
+            getAllEmployees(employeeId)
             .then((data) => { 
                 const singleEmployee = data[0]
                 updateEmployee(singleEmployee)

@@ -1,4 +1,5 @@
 import { useEffect, useState } from "react"
+import { getProductsWithTypes, getCustomersAndUsers, saveNewPurchase } from "../ApiManager"
 import "./Products.css"
 
 
@@ -17,8 +18,7 @@ export const CustomerProductsList = ({ searchTermState }) => {
 
     // function to fetch products from the API, tried a different way to write the useEffect 
     const getAllProducts = () => {
-        fetch(`http://localhost:8088/products?_sort=name&_expand=productType`)
-            .then(response => response.json())
+        getProductsWithTypes()
             .then(setProducts)
     }
 
@@ -32,8 +32,7 @@ export const CustomerProductsList = ({ searchTermState }) => {
     // to get customers for the purchase onCLick 
     useEffect(
         () => {
-            fetch(`http://localhost:8088/customers?_expand=user`)
-                .then(response => response.json())
+            getCustomersAndUsers()
                 .then((customerArr) => {
                     setCustomers(customerArr)
                 })
@@ -41,34 +40,11 @@ export const CustomerProductsList = ({ searchTermState }) => {
         []
     )
 
-
     const localKandyUser = localStorage.getItem("kandy_user")
     const KandyUserObject = JSON.parse(localKandyUser)
     const userId = customers.find(customer => customer.userId === KandyUserObject.id)
- 
 
-    // function to display and purchase products. 🦖🦖cant get to work since product is not defined...🦩🦩
-    // const purchaseCandyButton = () => {
-    //     <button onClick={() => {
-    //         return fetch(`http://localhost:8088/purchases`, {
-    //             method: "POST",
-    //             headers: {
-    //                 "Content-Type": "application/json"
-    //             },
-    //             body: JSON.stringify({
-    //                 customerId: userId.id,
-    //                 productId: parseInt(product.id),
-    //                 amount: 1
-    //             })
-    //         })
-    //             .then(response => response.json())
-    //             .then(() => {
-    //                 getAllProducts()
-    //             })
-    //     }}>Purchase</button>
-    //     }
-
-
+    
     // useEffect to display the products.  Product names are sorted in the fetch
     useEffect(
         () => {
@@ -98,20 +74,8 @@ export const CustomerProductsList = ({ searchTermState }) => {
                     return <section className="product" key={product.id}>
                         <header>{product.name}</header>
                         <div>Price: {product.price.toLocaleString("en-US", { style: "currency", currency: "USD" })}</div>
-
                         <button onClick={() => {
-                            return fetch(`http://localhost:8088/purchases`, {
-                                method: "POST",
-                                headers: {
-                                    "Content-Type": "application/json"
-                                },
-                                body: JSON.stringify({
-                                    customerId: userId.id,
-                                    productId: parseInt(product.id),
-                                    amount: 1
-                                })
-                            })
-                                .then(response => response.json())
+                            saveNewPurchase(userId, product)
                                 .then(() => {
                                     getAllProducts()
                                 })

@@ -1,4 +1,5 @@
 import { useState, useEffect } from "react"
+import { getCustomersAndUsers } from "../ApiManager"
 import { Customers } from "./Customers"
 import "./Customers.css"
 
@@ -9,8 +10,7 @@ export const CustomerList = () => {
     // fetching the customers and user data from API, observing initial state
     useEffect(
         () => {
-            fetch(`http://localhost:8088/customers?_expand=user`)
-                .then(response => response.json())
+            getCustomersAndUsers()
                 .then((customerArr) => {
                     setCustomers(customerArr)
                 })

@@ -1,4 +1,5 @@
 import { useEffect, useState } from "react"
+import { getLocations } from "../ApiManager"
 import "./Locations.css"
 
 export const LocationList = () => { 
@@ -9,8 +10,7 @@ export const LocationList = () => {
     // useEffect is to fetch the locations from the API, once received storing it in an array, and then calling on setLocations to assign the array to the locations state
     useEffect(
         () => { 
-            fetch(`http://localhost:8088/locations`)
-            .then(response => response.json())
+            getLocations()
             .then((locationsArray) => { 
                 setLocations(locationsArray)
             })

@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react"
 import { useParams } from "react-router-dom"
+import { getOrders } from "../ApiManager"
 import "./Products.css"
 
 // component to show customer orders. 🦖🦖🦖currently showing all customers orders, having issues showing individual customer orders, will work on... 🦩🦩🦩
@@ -10,8 +11,7 @@ export const Orders = () => {
     // gets purchases from the API with the customer userId and products
     useEffect(
         () => {
-            fetch(`http://localhost:8088/purchases?_expand=product&_expand=customer`)
-                .then(response => response.json())
+            getOrders()
                 .then((purchaseArray) => {
                     setPurchase(purchaseArray)
                 })

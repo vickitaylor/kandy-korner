@@ -2,6 +2,7 @@ import { useState, useEffect } from "react"
 import { Employees } from "./Employees"
 import { useNavigate } from "react-router-dom"
 import "./Employee.css"
+import { getAllEmployeesLocations } from "../ApiManager"
 
 
 export const EmployeeList = () => { 
@@ -12,8 +13,7 @@ export const EmployeeList = () => {
     // useEffect for getting the employees, users, and locations from the API, observing initial state
     
     const getAllEmployees = () => {
-        fetch(`http://localhost:8088/employees?_expand=user&_expand=location`)
-        .then(response => response.json())
+        getAllEmployeesLocations()
         .then((employeeArray) => {
             setEmployees(employeeArray)
         })

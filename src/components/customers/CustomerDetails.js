@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react"
 import { useNavigate, useParams } from "react-router-dom"
+import { getAllCustomers} from "../ApiManager"
 
 // component to display all of the customer information when linked is clicked
 
@@ -13,8 +14,7 @@ export const CustomerDetails = () => {
     // useEffect to fetch the individual customer data with their customerId, observing customerId 
     useEffect(
         () => { 
-            fetch(`http://localhost:8088/customers?_expand=user&userId=${customerId}`)
-            .then(response => response.json())
+            getAllCustomers(customerId)
             .then((data) => { 
                 const singleCustomer = data[0]
                 updateCustomer(singleCustomer)

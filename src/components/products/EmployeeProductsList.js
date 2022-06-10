@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react"
 import { useNavigate } from "react-router-dom"
+import { getProductsWithTypes } from "../ApiManager"
 
 import "./Products.css"
 
@@ -21,8 +22,7 @@ export const EmployeeProductsList = ({ searchTermState }) => {
     // useEffect to fetch the products from the API, used _sort to sort the products by name and _expand to get the types associated with the products, once received it will be stored in the productArray and then set to the state variable 
     useEffect(
         () => {
-            fetch(`http://localhost:8088/products?_sort=name&_expand=productType`)
-                .then(response => response.json())
+            getProductsWithTypes()
                 .then((productsArray) => {
                     setProducts(productsArray)
                 })

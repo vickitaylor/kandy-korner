@@ -1,5 +1,6 @@
 import { useState, useEffect } from "react"
 import { useNavigate } from "react-router-dom"
+import { getProductTypes, saveNewProduct } from "../ApiManager"
 
 import "./Products.css"
 
@@ -21,9 +22,8 @@ export const ProductForm = () => {
     // useEffect to get the productTypes
     useEffect(
         () => {
-            fetch(`http://localhost:8088/productTypes`)
-                .then(response => response.json())
-                .then((productTypeArr) => {
+            getProductTypes()
+            .then((productTypeArr) => {
                     setTypes(productTypeArr)
                 })
         },
@@ -42,15 +42,8 @@ export const ProductForm = () => {
         }
 
         // preforming fetch to POST the object to the API
-        return fetch(`http://localhost:8088/products`, {
-            method: "POST",
-            headers: {
-                "Content-Type": "application/json"
-            },
-            body: JSON.stringify(productToAPI)
-        })
-            .then(response => response.json())
-            .then(() => {
+        saveNewProduct(productToAPI)
+        .then(() => {
                 navigate("/products")
             })
     }

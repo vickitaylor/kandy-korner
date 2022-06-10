@@ -1,5 +1,6 @@
 import { useState, useEffect } from "react";
 import { useNavigate, useParams } from "react-router-dom";
+import { getCustomers, saveCustEdit } from "../ApiManager";
 
 // component that will allow an employee to edit the customer loyalty number
 
@@ -16,8 +17,7 @@ export const CustomerEdit = () => {
 
     useEffect(
         () => {
-            fetch(`http://localhost:8088/customers/${customerId}`)
-                .then(response => response.json())
+            getCustomers(customerId)
                 .then((data) => {
                     updateCustomer(data)
                 })
@@ -28,14 +28,7 @@ export const CustomerEdit = () => {
     const saveButtonClick = (event) => {
         event.preventDefault()
 
-        return fetch(`http://localhost:8088/customers/${customerId}`, {
-            method: "PUT",
-            headers: {
-                "Content-Type": "application/json"
-            },
-            body: JSON.stringify(customer)
-        })
-            .then(response => response.json())
+        saveCustEdit(customerId, customer)
             .then(() => {
                 navigate("/customer")
             })
